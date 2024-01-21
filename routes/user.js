@@ -1,14 +1,15 @@
 const router = require('express').Router(); // создали роутер
-const User = require('../models/user');
 
-const { createUser } = require('../controllers/users');
-const { getUsers } = require('../controllers/users');
-const { getUser } = require('../controllers/users');
+const { updateInfo,createUser,getUsers,getUser,updateAvatar } = require('../controllers/users');
 
-router.get('/users', getUsers);
+router.get('/', getUsers);
 
-router.get('/users/:id', getUser);
+router.get('/:userId', getUser);
 
-router.post('/users', createUser);
+router.post('/', createUser);
+
+router.patch('/me', updateInfo);
+
+router.patch('/me/avatar', updateAvatar);
 
 module.exports = router; // экспортировали роутер
