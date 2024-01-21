@@ -29,7 +29,7 @@ const getUser = (req, res) => {
         }
         return res.send(user);
       })
-      .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+      .catch(() => res.status(VALIDATION_ERROR_CODE).send({ message: 'Переданы некорректные данные' }));
 };
 
 const updateInfo = (req, res) => {
