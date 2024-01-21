@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 const cardRoutes = require('./routes/card');
+const NOT_FOUND_ERROR_CODE = 404;
 
 
 const { PORT = 3000 } = process.env;
@@ -24,6 +25,12 @@ app.use((req, res, next) => {
 
 app.use('/users', userRoutes);
 app.use('/cards', cardRoutes);
+
+app.use('*', (req, res, next) => {
+  next(res.status(NOT_FOUND_ERROR_CODE).send({
+    message: "Запрашиваемый адрес не найден"
+  }));
+});
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
