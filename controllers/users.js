@@ -7,7 +7,9 @@ const createUser = (req, res) => {
 
   User.create({ name, about,avatar })
     .then(user => res.send(user))
-    .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send("Переданы некорректные данные")});
+    .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send({
+      message: "Переданы некорректные данные"
+    })});
 };
 
 const getUsers = (req, res) => {
@@ -21,7 +23,9 @@ const getUser = (req, res) => {
   User.findById(userId)
       .then((user) => {
         if (!user) {
-          return res.status(NOT_FOUND_ERROR_CODE).send("Запрашиваемый пользователь не найден")
+          return res.status(NOT_FOUND_ERROR_CODE).send({
+            message: "Запрашиваемый пользователь не найден"
+          })
         }
         return res.send(user);
       })
@@ -34,10 +38,14 @@ const updateInfo = (req, res) => {
 
   User.findByIdAndUpdate(userId, { name, about },{ new: true} )
       .then((user) => {
-        if (!user) {return res.status(NOT_FOUND_ERROR_CODE).send("Запрашиваемый пользователь не найден")};
+        if (!user) {return res.status(NOT_FOUND_ERROR_CODE).send({
+          message: "Запрашиваемый пользователь не найден"
+        })};
         return res.send(user);
       })
-      .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send("Переданы некорректные данные")});
+      .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send({
+        message: "Переданы некорректные данные"
+      })});
 };
 
 const updateAvatar = (req, res) => {
@@ -46,10 +54,14 @@ const updateAvatar = (req, res) => {
 
   User.findByIdAndUpdate(userId, { avatar },{ new: true} )
       .then((user) => {
-        if (!user) {return res.status(NOT_FOUND_ERROR_CODE).send("Запрашиваемый пользователь не найден")};
+        if (!user) {return res.status(NOT_FOUND_ERROR_CODE).send({
+          message: "Запрашиваемый пользователь не найден"
+        })};
         return res.send(user);
       })
-      .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send("Переданы некорректные данные")});
+      .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send({
+        message: "Переданы некорректные данные"
+      })});
 };
 
 module.exports = {

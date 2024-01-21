@@ -8,7 +8,9 @@ const createCard = (req, res) => {
 
   Card.create({name, link,owner})
     .then(card => res.send(card))
-    .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send("Переданы некорректные данные")});
+    .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send({
+      message: "Переданы некорректные данные"
+    })});
 };
 
 const getCards = (req, res) => {
@@ -24,7 +26,9 @@ const deleteCard = (req, res) => {
   Card.findByIdAndDelete(cardId)
       .then((card) => {
         if (!card) {
-          return res.status(NOT_FOUND_ERROR_CODE).send('Такой карточки не существует')
+          return res.status(NOT_FOUND_ERROR_CODE).send({
+            message: "Такой карточки не существует"
+          })
         }
         return res.send(card);
       })
@@ -46,7 +50,9 @@ const likeCard = (req, res) => {
     )
     .then((card) => {
       if (card) {return res.send(card)};
-      return res.status(NOT_FOUND_ERROR_CODE).send('Такой карточки не существует')
+      return res.status(NOT_FOUND_ERROR_CODE).send({
+        message: "Такой карточки не существует"
+      })
     })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
@@ -65,7 +71,9 @@ const dislikeCard = (req, res) => {
     )
     .then((card) => {
       if (card) {return res.send(card)};
-      return res.status(NOT_FOUND_ERROR_CODE).send('Такой карточки не существует')
+      return res.status(NOT_FOUND_ERROR_CODE).send({
+        message: "Такой карточки не существует"
+      })
     })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
