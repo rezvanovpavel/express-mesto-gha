@@ -32,7 +32,7 @@ const deleteCard = (req, res) => {
         }
         return res.send(card);
       })
-      .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+      .catch(() => res.status(VALIDATION_ERROR_CODE).send({ message: 'Переданы некорректные данные' }));
 };
 
 const likeCard = (req, res) => {
