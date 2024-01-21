@@ -21,4 +21,14 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.methods.joiValidate = function(obj) {
+	const Joi = require('joi');
+	const schema = {
+		name: Joi.types.String().min(2).max(30).required(),
+		about: Joi.types.String().min(2).max(30).required(),
+		avatar: Joi.types.String().email().required(),
+	}
+	return Joi.validate(obj, schema);
+}
+
 module.exports = mongoose.model('user', userSchema);
