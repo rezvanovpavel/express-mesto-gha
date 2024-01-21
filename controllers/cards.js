@@ -54,7 +54,7 @@ const likeCard = (req, res) => {
         message: "Такой карточки не существует"
       })
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(VALIDATION_ERROR_CODE).send({ message: 'Переданы некорректные данные' }));
 };
 
 const dislikeCard = (req, res) => {
@@ -75,7 +75,7 @@ const dislikeCard = (req, res) => {
         message: "Такой карточки не существует"
       })
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(VALIDATION_ERROR_CODE).send({ message: 'Переданы некорректные данные' }));
 };
 
 module.exports = {
