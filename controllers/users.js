@@ -25,7 +25,7 @@ const getUsers = (req, res) => {
 
 const getUser = (req, res) => {
   const { userId } = req.params.userId;
-  User.findById(userId)
+  User.findById({ userId })
     .then((user) => {
       if (!user) {
         return res.status(NOT_FOUND_ERROR_CODE).send({
