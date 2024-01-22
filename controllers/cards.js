@@ -46,7 +46,7 @@ const likeCard = (req, res) => {
           likes: owner,
         },
       },
-      {new: true}
+      {new: true, runValidators:true}
     )
     .then((card) => {
       if (card) {return res.send(card)};
@@ -67,7 +67,7 @@ const dislikeCard = (req, res) => {
           likes: owner,
         },
       },
-      {new: true}
+      {new: true, runValidators:true}
     )
     .then((card) => {
       if (card) {return res.send(card)};
