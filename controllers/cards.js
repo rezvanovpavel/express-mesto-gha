@@ -25,9 +25,7 @@ const getCards = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  const { cardId } = req.params.cardId;
-
-  Card.findByIdAndDelete(cardId)
+  Card.findByIdAndDelete(req.params.cardId)
     .then((card) => {
       if (!card) {
         return res.status(NOT_FOUND_ERROR_CODE).send({
@@ -45,11 +43,10 @@ const deleteCard = (req, res) => {
 };
 
 const likeCard = (req, res) => {
-  const { cardId } = req.params.cardId;
   const owner = req.user._id;
 
   Card.findByIdAndUpdate(
-    cardId,
+    req.params.cardId,
     {
       $addToSet: {
         likes: owner,
@@ -74,11 +71,10 @@ const likeCard = (req, res) => {
 };
 
 const dislikeCard = (req, res) => {
-  const { cardId } = req.params.cardId;
   const owner = req.user._id;
 
   Card.findByIdAndUpdate(
-    cardId,
+    req.params.cardId,
     {
       $pull: {
         likes: owner,
