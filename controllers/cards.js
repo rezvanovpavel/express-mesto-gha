@@ -1,6 +1,7 @@
 const Card = require('../models/card');
-const VALIDATION_ERROR_CODE = 400;
+const BAD_REQUEST_ERROR_CODE = 400;
 const NOT_FOUND_ERROR_CODE = 404;
+const INTERNAL_SERVER_ERROR_CODE = 500;
 
 const createCard = (req, res) => {
   const owner = req.user._id;
@@ -8,15 +9,15 @@ const createCard = (req, res) => {
 
   Card.create({name, link,owner})
     .then(card => res.send(card))
-    .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send({
-      message: "Переданы некорректные данные"
-    })});
+    .catch((err) => {if (err.name === 'ValidationError') {return res.status(BAD_REQUEST_ERROR_CODE).send({ message: 'Переданы некорректные данные' })} else {
+      return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' })
+      }});
 };
 
 const getCards = (req, res) => {
   Card.find({})
       .then(cards => res.send(cards))
-      .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+      .catch(() => res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' }));
 };
 
 const deleteCard = (req, res) => {
@@ -32,7 +33,9 @@ const deleteCard = (req, res) => {
         }
         return res.send(card);
       })
-      .catch(() => res.status(VALIDATION_ERROR_CODE).send({ message: 'Переданы некорректные данные' }));
+      .catch((err) => {if (err.name === 'CastError') {return res.status(BAD_REQUEST_ERROR_CODE).send({ message: 'Передан некорректный id' })} else {
+        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' })
+        }});
 };
 
 const likeCard = (req, res) => {
@@ -54,7 +57,9 @@ const likeCard = (req, res) => {
         message: "Такой карточки не существует"
       })
     })
-    .catch(() => res.status(VALIDATION_ERROR_CODE).send({ message: 'Переданы некорректные данные' }));
+    .catch((err) => {if (err.name === 'CastError') {return res.status(BAD_REQUEST_ERROR_CODE).send({ message: 'Передан некорректный id' })} else {
+      return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' })
+      }});
 };
 
 const dislikeCard = (req, res) => {
@@ -75,7 +80,9 @@ const dislikeCard = (req, res) => {
         message: "Такой карточки не существует"
       })
     })
-    .catch(() => res.status(VALIDATION_ERROR_CODE).send({ message: 'Переданы некорректные данные' }));
+    .catch((err) => {if (err.name === 'CastError') {return res.status(BAD_REQUEST_ERROR_CODE).send({ message: 'Передан некорректный id' })} else {
+      return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' })
+      }});
 };
 
 module.exports = {

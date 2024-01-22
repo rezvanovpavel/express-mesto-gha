@@ -1,21 +1,22 @@
 const User = require('../models/user');
-const VALIDATION_ERROR_CODE = 400;
+const BAD_REQUEST_ERROR_CODE = 400;
 const NOT_FOUND_ERROR_CODE = 404;
+const INTERNAL_SERVER_ERROR_CODE = 500;
 
 const createUser = (req, res) => {
   const { name, about,avatar } = req.body;
 
   User.create({ name, about,avatar })
     .then(user => res.send(user))
-    .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send({
-      message: "Переданы некорректные данные"
-    })});
+    .catch((err) => {if (err.name === 'ValidationError') {return res.status(BAD_REQUEST_ERROR_CODE).send({ message: 'Переданы некорректные данные' })} else {
+      return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' })
+      }});
 };
 
 const getUsers = (req, res) => {
   User.find({})
       .then(users => res.send(users))
-      .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+      .catch(() => res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' }));
 };
 
 const getUser = (req, res) => {
@@ -29,7 +30,9 @@ const getUser = (req, res) => {
         }
         return res.send(user);
       })
-      .catch(() => res.status(VALIDATION_ERROR_CODE).send({ message: 'Переданы некорректные данные' }));
+      .catch((err) => {if (err.name === 'CastError') {return res.status(BAD_REQUEST_ERROR_CODE).send({ message: 'Передан некорректный id' })} else {
+        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' })
+        }});
 };
 
 const updateInfo = (req, res) => {
@@ -43,9 +46,9 @@ const updateInfo = (req, res) => {
         })};
         return res.send(user);
       })
-      .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send({
-        message: "Переданы некорректные данные"
-      })});
+      .catch((err) => {if (err.name === 'ValidationError') {return res.status(BAD_REQUEST_ERROR_CODE).send({ message: 'Переданы некорректные данные' })} else {
+        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' })
+        }});
 };
 
 const updateAvatar = (req, res) => {
@@ -59,9 +62,9 @@ const updateAvatar = (req, res) => {
         })};
         return res.send(user);
       })
-      .catch((err) => {if (err.name === 'ValidationError') return res.status(VALIDATION_ERROR_CODE).send({
-        message: "Переданы некорректные данные"
-      })});
+      .catch((err) => {if (err.name === 'ValidationError') {return res.status(BAD_REQUEST_ERROR_CODE).send({ message: 'Переданы некорректные данные' })} else {
+        return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' })
+        }});
 };
 
 module.exports = {
