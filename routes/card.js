@@ -9,11 +9,7 @@ const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()
 
 router.get('/', getCards);
 
-router.delete('/:cardId', celebrate({
-  params: Joi.object().keys({
-    id: Joi.string().length(24).hex().required(),
-  }),
-}), deleteCard);
+router.delete('/:cardId', deleteCard);
 
 router.post('/', celebrate({
   body: Joi.object().keys({
