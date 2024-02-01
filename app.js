@@ -55,18 +55,10 @@ app.use('*', (req, res, next) => {
 
 app.use(errors()); // обработчик ошибок celebrate
 
-app.use((err, req, res) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
+app.use((err, req, res, next) => {
+  const { responseStatus = err.status || 500, message } = err;
+  res.status(responseStatus).send({ message: responseStatus === 500 ? 'На сервере произошла ошибка' : message });
+  next();
 });
 
 app.listen(PORT, () => {
