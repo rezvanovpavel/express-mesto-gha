@@ -95,14 +95,14 @@ const updateAvatar = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  return User
+  User
     .findUserByCredentials(email, password)
     .then((user) => {
-      if (user._id) {
-        const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-        return res.send({ token });
+      if (!user) {
+        throw new UnauthorizedError('Ошибка авторизации');
       }
-      throw new UnauthorizedError('Ошибка авторизации');
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      return res.send({ token });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
