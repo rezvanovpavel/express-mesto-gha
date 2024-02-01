@@ -26,29 +26,21 @@ const getCards = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
+  const { cardId } = req.params;
+  return Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Такой карточки не существует');
-      }
-      if (card.owner.toString() !== req.user._id) {
+      } else if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Нет прав доступа');
       }
-      return Card.findByIdAndRemove(req.params.cardId)
-        .populate(['owner', 'likes'])
-        .then((deletedCard) => {
-          res.send(deletedCard);
-        })
-        .catch((err) => {
-          next(err);
-        });
+      return Card.findByIdAndRemove(cardId).then((deletedCard) => res.send(deletedCard));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан некорректный id'));
-      } else {
-        next(err);
       }
+      next(err);
     });
 };
 
