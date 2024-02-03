@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const userRoutes = require('./routes/user');
 const cardRoutes = require('./routes/card');
@@ -24,6 +25,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger); // подключаем логгер запросов
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -50,8 +53,10 @@ app.use('/users', userRoutes);
 app.use('/cards', cardRoutes);
 
 app.use('*', (req, res, next) => {
-  next(new NotFoundError('Нет пользователя с таким id'));
+  next(new NotFoundError('Нет такого маршрута'));
 });
+
+app.use(errorLogger); // подключаем логгер ошибок
 
 app.use(errors()); // обработчик ошибок celebrate
 
